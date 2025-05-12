@@ -3,8 +3,14 @@ import { useState } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { MeetingData } from "../types/meeting";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, MoreHorizontal } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 interface SummaryProps {
   meeting: MeetingData;
@@ -53,6 +59,7 @@ export const Summary = ({ meeting }: SummaryProps) => {
     const newItem = {
       id: `action-${Date.now()}`,
       text: "New action item",
+      completed: false // Added the required 'completed' property
     };
     setActionItems([...actionItems, newItem]);
     toast({
