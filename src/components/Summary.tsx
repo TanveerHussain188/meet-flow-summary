@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { MeetingData } from "../types/meeting";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trash2, Plus, MoreHorizontal } from "lucide-react";
+import { Trash2, Plus, MoreHorizontal, Edit, Check } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +18,8 @@ interface SummaryProps {
 
 export const Summary = ({ meeting }: SummaryProps) => {
   const [actionItems, setActionItems] = useState([...meeting.actionItems]);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
+  const [editText, setEditText] = useState("");
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source } = result;
@@ -68,6 +70,33 @@ export const Summary = ({ meeting }: SummaryProps) => {
     });
   };
 
+  const startEditing = (id: string, text: string) => {
+    setEditingItemId(id);
+    setEditText(text);
+  };
+
+  const saveEdit = (id: string) => {
+    if (editText.trim() === "") return;
+    
+    setActionItems(actionItems.map(item => 
+      item.id === id ? { ...item, text: editText } : item
+    ));
+    
+    setEditingItemId(null);
+    toast({
+      title: "Action item updated",
+      description: "The action item has been successfully updated.",
+    });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, id: string) => {
+    if (e.key === 'Enter') {
+      saveEdit(id);
+    } else if (e.key === 'Escape') {
+      setEditingItemId(null);
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* Overview Section */}
@@ -115,18 +144,44 @@ export const Summary = ({ meeting }: SummaryProps) => {
                         {...provided.dragHandleProps}
                         className="flex items-center justify-between group bg-white border border-gray-200 p-3 rounded-md hover:border-gray-300 transition-colors"
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 flex-1">
                           <Checkbox id={`action-${item.id}`} />
-                          <label 
-                            htmlFor={`action-${item.id}`} 
-                            className="text-gray-700 cursor-pointer"
-                          >
-                            {item.text}
-                          </label>
+                          {editingItemId === item.id ? (
+                            <div className="flex-1 flex gap-2">
+                              <Input 
+                                value={editText}
+                                onChange={(e) => setEditText(e.target.value)}
+                                onKeyDown={(e) => handleKeyDown(e, item.id)}
+                                autoFocus
+                                className="flex-1"
+                              />
+                              <button 
+                                onClick={() => saveEdit(item.id)}
+                                className="text-green-600 hover:text-green-700 transition-colors"
+                              >
+                                <Check className="h-5 w-5" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 flex-1">
+                              <label 
+                                htmlFor={`action-${item.id}`} 
+                                className="text-gray-700 cursor-pointer flex-1"
+                              >
+                                {item.text}
+                              </label>
+                              <button 
+                                onClick={() => startEditing(item.id, item.text)}
+                                className="text-gray-400 hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </button>
+                            </div>
+                          )}
                         </div>
                         <button 
                           onClick={() => handleDeleteActionItem(item.id)}
-                          className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                          className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 ml-2"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
