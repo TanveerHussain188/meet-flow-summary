@@ -8,6 +8,13 @@ interface TranscriptProps {
 }
 
 export const Transcript = ({ meeting }: TranscriptProps) => {
+  // Custom colors for speakers
+  const speakerColors: Record<string, string> = {
+    "Charlie": "bg-blue-600",
+    "Tanveer": "bg-purple-600",
+    "Lisa": "bg-amber-500"
+  };
+
   return (
     <div>
       {/* Keywords section */}
@@ -22,30 +29,34 @@ export const Transcript = ({ meeting }: TranscriptProps) => {
       <div className="mb-8">
         <h3 className="text-base font-semibold mb-3 text-gray-800">Speakers</h3>
         <div className="flex flex-wrap gap-6">
-          {Object.entries(meeting.speakerStats).map(([name, percentage]) => (
-            <div key={name} className="flex flex-col items-center">
-              <Avatar className={`h-14 w-14 mb-2 ${name === "Charlie" ? "bg-blue-600" : "bg-amber-500"}`}>
-                <AvatarFallback className="text-lg text-white font-medium">
-                  {name.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <span className="font-medium text-gray-800">{name}</span>
-              <span className="text-sm text-gray-500">{percentage}</span>
-            </div>
-          ))}
+          {Object.entries(meeting.speakerStats).map(([name, percentage]) => {
+            const speakerColor = speakerColors[name] || "bg-gray-500";
+            
+            return (
+              <div key={name} className="flex flex-col items-center">
+                <Avatar className={`h-14 w-14 mb-2 ${speakerColor}`}>
+                  <AvatarFallback className="text-lg text-white font-medium">
+                    {name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="font-medium text-gray-800 text-center">{name}</span>
+                <span className="text-sm text-gray-500">{percentage}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Transcript exchanges */}
       <div className="space-y-6 mt-8">
         {meeting.transcript.map((exchange, index) => {
-          const speakerColor = exchange.speaker === "Charlie" ? "bg-blue-600" : "bg-amber-500";
+          const speakerColor = speakerColors[exchange.speaker] || "bg-gray-500";
           
           return (
             <div key={index} className="flex gap-4">
               <div className="flex-shrink-0 pt-1">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${speakerColor}`}>
-                  {exchange.speaker.charAt(0)}
+                  <span className="font-medium">{exchange.speaker.charAt(0)}</span>
                 </div>
               </div>
               

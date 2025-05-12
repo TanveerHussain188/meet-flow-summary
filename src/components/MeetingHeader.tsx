@@ -1,8 +1,15 @@
 
-import { Calendar, Clock, Copy } from "lucide-react";
+import { Calendar, Clock, MoreHorizontal } from "lucide-react";
 import { MeetingData } from "../types/meeting";
-import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 interface MeetingHeaderProps {
   meeting: MeetingData;
@@ -31,14 +38,24 @@ export const MeetingHeader = ({ meeting }: MeetingHeaderProps) => {
           <span>{meeting.duration}</span>
         </div>
         
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="ml-auto flex items-center gap-1 text-sm font-medium"
-        >
-          <Copy className="h-4 w-4" />
-          Copy Summary
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="ml-auto flex items-center gap-1 text-sm font-medium p-2 hover:bg-gray-100 rounded-md">
+            <MoreHorizontal className="h-4 w-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Meeting Options</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              Download Summary
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              Share Meeting
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              Print Summary
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       
       <div className="flex items-center mt-4 gap-2 text-sm text-gray-600">
