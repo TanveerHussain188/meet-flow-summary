@@ -1,5 +1,5 @@
 
-import { Calendar, Clock, Image, Copy } from "lucide-react";
+import { Calendar, Clock, Copy } from "lucide-react";
 import { MeetingData } from "../types/meeting";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
@@ -29,11 +29,6 @@ export const MeetingHeader = ({ meeting }: MeetingHeaderProps) => {
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4" />
           <span>{meeting.duration}</span>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Image className="h-4 w-4" />
-          <span>{meeting.screenshots} Screenshots</span>
         </div>
         
         <Button 
