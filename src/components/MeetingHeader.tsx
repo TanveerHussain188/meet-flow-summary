@@ -22,7 +22,7 @@ export const MeetingHeader = ({ meeting }: MeetingHeaderProps) => {
       
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-600">
         <div className="flex items-center gap-2">
-          <Avatar className="h-6 w-6 bg-blue-600">
+          <Avatar className="h-6 w-6 bg-blue-600 rounded-full flex items-center justify-center ">
             <span className="text-xs text-white font-medium">{meeting.creator.initials}</span>
           </Avatar>
           <span>{meeting.creator.name}</span>
